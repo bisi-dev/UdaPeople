@@ -25,6 +25,27 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
             aws s3 rm s3://udapeople-<< parameters.Workflow_ID >> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >> 
+  
+  install_awscli:
+    description: "install aws cli"
+    steps:
+      - run:
+          name: Installing aws-cli
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            
+  install_ansible:
+    description: "install ansible"
+    steps:
+      - run:
+          name: Installing ansible
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common -y
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible -y
 
 jobs:
   build-frontend:
@@ -151,6 +172,26 @@ jobs:
           root: ~/      
           paths:
             - project/.circleci/ansible/inventory.txt
+      - destroy-environment
+      - notify_on_failure
+
+  configure-infrastructure:
+    docker: 
+      - image: cimg/base:2022.04
+    steps:
+      - checkout
+      - install_awscli
+      - install_ansible
+      - add_ssh_keys:
+          fingerprints: ["c8:d6:89:d2:47:0e:f7:38:7b:e1:13:da:6c:19:2d:3a"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
       - notify_on_failure
 
