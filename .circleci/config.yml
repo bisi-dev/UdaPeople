@@ -79,7 +79,7 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -96,7 +96,7 @@ jobs:
 
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -210,13 +210,13 @@ jobs:
 
   configure-infrastructure:
     docker: 
-      - image: cimg/base:2022.04
+      - image: cimg/base:stable
     steps:
       - checkout
       - install_awscli
       - install_ansible
       - add_ssh_keys:
-          fingerprints: ["c8:d6:89:d2:47:0e:f7:38:7b:e1:13:da:6c:19:2d:3a"]
+          fingerprints: ["e6:3e:1c:ef:be:7b:f5:7a:15:0b:fb:18:d1:4c:59:e2"]
       - attach_workspace:
           at: ~/
       - run:
@@ -230,7 +230,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - install_awscli
@@ -252,7 +252,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: cimg/base:2022.04 
+      - image: cimg/base:stable
     steps:
       - checkout
       - install_awscli
@@ -285,7 +285,7 @@ jobs:
   
   deploy-backend:
     docker:
-      - image: cimg/base:2022.04 
+      - image: cimg/base:stable
     steps:
       - checkout
       - install_awscli
