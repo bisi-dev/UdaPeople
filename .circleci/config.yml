@@ -323,7 +323,6 @@ jobs:
   deploy-backend:
     docker:
       - image: cimg/node:13.8.0
-
         environment:
           NODE_ENV: "local"
           VERSION: "1"

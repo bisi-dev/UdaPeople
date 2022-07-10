@@ -34,6 +34,21 @@
       become: true
       raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
       changed_when: false
+
+    - name: Loading environment variables
+      tags: always
+      set_fact:
+        NODE_ENV: "production"
+        VERSION: "1"
+        ENVIRONMENT: production
+        TYPEORM_CONNECTION: "{{ lookup('env','TYPEORM_CONNECTION') }}"
+        TYPEORM_HOST: "{{ lookup('env','TYPEORM_HOST') }}"
+        TYPEORM_PORT: "{{ lookup('env','TYPEORM_PORT') }}"
+        TYPEORM_USERNAME: "{{ lookup('env','TYPEORM_USERNAME') }}"
+        TYPEORM_PASSWORD: "{{ lookup('env','TYPEORM_PASSWORD') }}"
+        TYPEORM_DATABASE: "{{ lookup('env','TYPEORM_DATABASE') }}"
+        TYPEORM_ENTITIES: "{{ lookup('env','TYPEORM_ENTITIES') }}"
+    
     - setup:
 
   roles:
