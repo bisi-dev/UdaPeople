@@ -11,8 +11,8 @@ commands:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_DEFAULT_REGION
 
-orbs:
-  slack: circleci/slack@4.9.3
+# orbs:
+#   slack: circleci/slack@4.9.3
 
 # commands:
 #   notify_on_failure:
