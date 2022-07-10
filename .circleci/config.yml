@@ -383,13 +383,16 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            export BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt)
-            echo BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt) >> "url.txt"
-            cat url.txt
+            BACKEND_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            export API_URL=http://${BACKEND_IP}:3030
+            echo ${API_URL}
       - run:
           name: Backend smoke test
           command: |
-            if curl -s https://${BACKEND_URL}:3030/api/status | grep "ok"
+            if curl -s ${API_URL}/api/status | grep "ok"
             then
               return 0
             else
