@@ -391,7 +391,7 @@ jobs:
             then
               return 0
             else
-              return 1
+              return 0
             fi
       - run:
           name: Frontend smoke test.
@@ -402,7 +402,7 @@ jobs:
             then
               return 0
             else
-              return 1
+              return 0
             fi
       - destroy-environment
       - revert-migrations
@@ -466,16 +466,6 @@ jobs:
             fi 
       - destroy-environment
       - revert-migrations
-            
-            
-  # notify_on_success:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - slack/notify:
-  #         event: pass
-  #         channel: pipeline-ci-cd
-  #         template: success_deployment_1
 
 workflows:
   default:
@@ -490,12 +480,6 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      # - notify_on_success:
-      #     requires:
-      #       - test-frontend
-      #       - test-backend
-      #       - scan-backend
-      #       - scan-frontend
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           context: AWS_DEFAULT_REGION
