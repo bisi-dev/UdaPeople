@@ -485,7 +485,7 @@ workflows:
           context: AWS_DEFAULT_REGION
           filters:
             branches:
-              only: [master]
+              only: [master, hot-fix]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
           context: AWS_DEFAULT_REGION
