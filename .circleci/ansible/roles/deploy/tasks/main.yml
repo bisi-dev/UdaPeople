@@ -1,0 +1,33 @@
+---
+- name: create directory for backend
+  become: yes
+  file:
+      path: ~/backend
+      state: directory
+      mode: 0755
+
+- name: "Copying backend zip file"
+  copy:
+    src: "~/artifact.tar.gz"
+    dest: "~/artifact.tar.gz"
+
+- name: "Unzip backend files to correct directory"
+  ansible.builtin.unarchive:
+    src: ~/artifact.tar.gz
+    dest: ~/backend
+    
+- name: "Install dependencies"
+  shell: |
+    cd ~/backend
+    npm install
+
+- name: "Executing node"
+  shell: |
+    cd ~/backend
+    pm2 stop default
+    pm2 start npm -- start
+  register: execute_node_server
+
+- name: print log
+  debug:
+    msg: "{{ execute_node_server.stdout_lines }}"
