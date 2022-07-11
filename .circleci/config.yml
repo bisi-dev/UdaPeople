@@ -49,15 +49,15 @@ jobs:
 
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: yarnpkg/dev:latest
     steps:
       - checkout
       - run:
           name: Back-end build
           command: |
             cd backend
-            npm i
-            npm run build
+            yarn install
+            yarn run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -184,7 +184,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      - image: yarnpkg/dev:latest
         user: root
     steps:
       - checkout
@@ -197,8 +197,9 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm install
-            npm run migrations > migrations_dump.txt
+            yarn install
+            yarn run build
+            yarn run migrations > migrations_dump.txt
       - run:
           name: Send migration results to kvdb.io
           command: |
@@ -242,7 +243,7 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: cimg/python:3.10.0-node
+      - image: yarnpkg/dev:latest
         user: root
     steps:
       - checkout
@@ -262,8 +263,8 @@ jobs:
           name: build backend dist
           command: |
             cd backend
-            npm install
-            npm run build
+            yarn install
+            yarn run build
             cd ..
             # Zip the directory
             tar -C backend -czvf ~/artifact.tar.gz .
