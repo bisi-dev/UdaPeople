@@ -1,0 +1,5 @@
+Github repo link [URL01] : https://github.com/bisi-dev/UdaPeople
+S3 bucket public link [URL02] : http://udapeople-16f2695.s3.amazonaws.com/index.html
+CloudFront link [URL03] : https://dgemxxvwo4x8s.cloudfront.net/
+Link to deployed application ec2 instance [URL04]: http://44.204.54.235:3030/api/status
+Link to prometheus server [URL05]: http://54.161.136.102:9090/
