@@ -64,17 +64,17 @@ jobs:
     executor: node
     steps:
       - checkout
-      # - restore_cache:
-      #     keys: [frontend-build]
+      - restore_cache:
+          keys: [frontend-build]
       - run:
           name: Build front-end
           command: |
             cd frontend
             npm install
             npm run build
-      # - save_cache:
-      #     paths: [frontend/node_modules]
-      #     key: frontend-build
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
       - persist_to_workspace:
           root: .
           paths:
@@ -84,8 +84,8 @@ jobs:
     executor: node
     steps:
       - checkout
-      # - restore_cache:
-      #     keys: [backend-build]
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: prepare environment for backend build
           command: |
@@ -109,13 +109,13 @@ jobs:
             cat .env
             npm install
             npm run build
-      # - save_cache:
-      #     paths: [backend/node_modules]
-      #     key: backend-build
-      # - persist_to_workspace:
-      #     root: .
-      #     paths:
-      #       - backend/node_modules    
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - backend/node_modules    
     
   test-frontend:
     executor: node
@@ -222,18 +222,6 @@ jobs:
     docker:
       - image: python:3.7-alpine3.11
       # Docker image here that supports Ansible
-        environment:
-          VERSION: "1"
-          ENVIRONMENT: "production"
-          TYPEORM_CONNECTION: ${TYPEORM_CONNECTION}
-          TYPEORM_HOST: ${TYPEORM_HOST}
-          TYPEORM_USERNAME: ${TYPEORM_USERNAME}
-          TYPEORM_PASSWORD: ${TYPEORM_PASSWORD}
-          TYPEORM_DATABASE: ${TYPEORM_DATABASE}
-          TYPEORM_PORT: ${TYPEORM_PORT}
-          TYPEORM_ENTITIES: ${TYPEORM_ENTITIES}        
-          TYPEORM_MIGRATIONS: ${TYPEORM_MIGRATIONS}
-          TYPEORM_MIGRATIONS_DIR: ${TYPEORM_MIGRATIONS_DIR}
     steps:
       # Checkout code from git
       - checkout
@@ -275,29 +263,10 @@ jobs:
             sudo apt-get -qq install awscli
             sudo apt-get -y -qq install python3
       - run:
-          name: prepare environment for backend build
-          command: |
-            cd backend
-            rm .env 
-            cat \<< EOF > backend/.env
-            ENVIRONMENT=production
-            VERSION=1
-            TYPEORM_CONNECTION=postgres
-            TYPEORM_MIGRATIONS_DIR=./src/migrations
-            TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
-            TYPEORM_MIGRATIONS=./src/migrations/*.ts
-            TYPEORM_HOST=${TYPEORM_HOST}
-            TYPEORM_PORT=${TYPEORM_PORT}
-            TYPEORM_USERNAME=${TYPEORM_USERNAME}
-            TYPEORM_PASSWORD=${TYPEORM_PASSWORD}
-            TYPEORM_DATABASE=${TYPEORM_DATABASE}
-            EOF    
-      - run:
           name: Run migrations
           working_directory: ./backend
           command: |            
             npm install
-            npm run build
             npm run migrations >> migration.txt
             cat migration.txt
       - run:
@@ -525,4 +494,3 @@ workflows:
       - cleanup:
           requires:
             - cloudfront-update    
-          
