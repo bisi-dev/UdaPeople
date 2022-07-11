@@ -472,7 +472,8 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure        
+      - deploy-infrastructure:
+          requires: [build-frontend, build-backend]        
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
