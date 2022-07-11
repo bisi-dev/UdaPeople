@@ -426,7 +426,7 @@ jobs:
           command: |
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
-            --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --stack-name InitialStack \
             --parameter-overrides  WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags env=udapeople-${CIRCLE_WORKFLOW_ID:0:7}
       - destroy_environment:
@@ -472,19 +472,11 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure:
-          filters:
-            branches:
-              only:
-                - master          
+      - deploy-infrastructure:          
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-          filters:
-            branches:
-              only:
-                - master          
       - deploy-backend:
           requires:
             - run-migrations
@@ -498,7 +490,7 @@ workflows:
       - cloudfront-update:
           requires:
             - smoke-test
-      # - cleanup:
-      #     requires:
-      #       - cloudfront-update    
+      - cleanup:
+          requires:
+            - cloudfront-update    
           
