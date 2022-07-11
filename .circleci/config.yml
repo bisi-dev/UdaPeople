@@ -200,6 +200,7 @@ jobs:
             yarn install
             yarn run build
             yarn run migrations > migrations_dump.txt
+            echo migrations_dump.txt
       - run:
           name: Send migration results to kvdb.io
           command: |
